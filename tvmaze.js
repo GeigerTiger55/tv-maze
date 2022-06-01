@@ -121,6 +121,24 @@ async function getEpisodesOfShow(id) {
 
 
 
-/** Write a clear docstring for this function... */
+/** Given list of episodes, create markup for each and add to DOM 
+ * 
+*/
 
-// function populateEpisodes(episodes) { }
+function populateEpisodes(episodes) {
+  const $episodesList = $("#episodesList");
+
+  for(let episode of episodes) {
+    const {name, season, number} = episode;
+
+
+    const $episodeLi = $(
+      `<li>${name} (season ${season}, number ${number})</li>`
+    )
+
+    $episodesList.append($episodeLi);
+  }
+
+  //Show Episodes Area
+  $episodesArea.css("display", "block");
+}
