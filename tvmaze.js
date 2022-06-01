@@ -121,8 +121,8 @@ async function getEpisodesOfShow(id) {
 
 
 
-/** Given list of episodes, create markup for each and add to DOM 
- * 
+/** Given list of episodes, create markup for each and add to DOM
+ *
 */
 
 function populateEpisodes(episodes) {
@@ -140,5 +140,15 @@ function populateEpisodes(episodes) {
   }
 
   //Show Episodes Area
-  $episodesArea.css("display", "block");
+  //$episodesArea.css("display", "block"); -- alternate way to show episodes
+  $episodesArea.show();
+}
+
+
+/** search for episodes and display them */
+
+async function getEpisodesAndDisplay() {
+  const showId = 431;
+  const episodes = await getEpisodesOfShow(showId);
+  populateEpisodes(episodes);
 }
