@@ -4,6 +4,8 @@ const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
 
+const DEFAULT_IMAGE_URL = 'https://tinyurl.com/tv-missing';
+
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -13,52 +15,31 @@ const $searchForm = $("#searchForm");
  */
 
 async function getShowsByTerm(searchTerm) {
-  // TOFIX?? Destructure Data so only returning specific 4 keys??
+
   const response = await axios.get("http://api.tvmaze.com/search/shows",
-  {params: {q: searchTerm}});
+    { params: { q: searchTerm } });
 
   const shows = [];
 
-  for(let dataObject of response.data){
-    let {id, image, summary, name} = dataObject.show;
-    if(image === null){
-      image = 'https://tinyurl.com/tv-missing';
+  for (let showAndScore of response.data) {
+    let { id, image, summary, name } = showAndScore.show;
+    if (image === null) {
+      image = DEFAULT_IMAGE_URL;
     } else {
       image = image.medium;
     }
 
-    console.log('image ', image);
-
     const tempShowObj = {
-      id: id,
-      image: image,
-      summary: summary,
-      name: name,
-    }
+      id,
+      image,
+      summary,
+      name,
+    };
     shows.push(tempShowObj);
   }
 
   return shows;
-/*
-  return [
-    {
-      id: 1767,
-      name: "The Bletchley Circle",
-      summary:
-        `<p><b>The Bletchley Circle</b> follows the journey of four ordinary
-           women with extraordinary skills that helped to end World War II.</p>
-         <p>Set in 1952, Susan, Millie, Lucy and Jean have returned to their
-           normal lives, modestly setting aside the part they played in
-           producing crucial intelligence, which helped the Allies to victory
-           and shortened the war. When Susan discovers a hidden code behind an
-           unsolved murder she is met by skepticism from the police. She
-           quickly realises she can only begin to crack the murders and bring
-           the culprit to justice with her former friends.</p>`,
-      image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/147/369403.jpg"
-    }
-  ]
-  */
+
 }
 
 
@@ -70,7 +51,7 @@ function populateShows(shows) {
   for (let show of shows) {
 
     const $show = $(
-        `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
+      `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
            <img
               src="${show.image}"
@@ -87,7 +68,8 @@ function populateShows(shows) {
        </div>
       `);
 
-    $showsList.append($show);  }
+    $showsList.append($show);
+  }
 }
 
 
@@ -113,7 +95,31 @@ $searchForm.on("submit", async function (evt) {
  *      { id, name, season, number }
  */
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) {
+
+  const response = await axios.get(`http://api.tvmaze.com/shows/${id}/episodes`);
+
+  const listedEpisodes = [];
+
+  for (let episode of response.data) {
+    let { id, name, season, number } = episode;
+
+    const tempEpisodeObj = {
+      id,
+      name,
+      season,
+      number,
+    };
+    listedEpisodes.push(tempEpisodeObj);
+
+  }
+
+  return listedEpisodes;
+
+}
+
+
+
 
 /** Write a clear docstring for this function... */
 
