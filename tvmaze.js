@@ -13,11 +13,32 @@ const $searchForm = $("#searchForm");
  */
 
 async function getShowsByTerm(searchTerm) {
-  // ADD: Remove placeholder & make request to TVMaze search shows API.
+  // TOFIX?? Destructure Data so only returning specific 4 keys??
   const response = await axios.get("http://api.tvmaze.com/search/shows",
   {params: {q: searchTerm}});
 
-  return response;
+  const shows = [];
+
+  for(let dataObject of response.data){
+    let {id, image, summary, name} = dataObject.show;
+    if(image === null){
+      image = '';
+    } else {
+      image = image.medium;
+    }
+
+    console.log('image ', image);
+
+    const tempShowObj = {
+      id: id,
+      image: image,
+      summary: summary,
+      name: name,
+    }
+    shows.push(tempShowObj);
+  }
+
+  return shows;
 /*
   return [
     {
