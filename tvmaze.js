@@ -128,13 +128,13 @@ async function getEpisodesOfShow(id) {
 function populateEpisodes(episodes) {
   const $episodesList = $("#episodesList");
 
-  for(let episode of episodes) {
-    const {name, season, number} = episode;
+  for (let episode of episodes) {
+    const { name, season, number } = episode;
 
 
     const $episodeLi = $(
       `<li>${name} (season ${season}, number ${number})</li>`
-    )
+    );
 
     $episodesList.append($episodeLi);
   }
@@ -145,10 +145,18 @@ function populateEpisodes(episodes) {
 }
 
 
-/** search for episodes and display them */
+/** search for episodes of the show and display them in the episodes
+ * area at the bottom, after all of the return matches from initial search.
+ *
+*/
 
-async function getEpisodesAndDisplay() {
-  const showId = 431;
+async function getEpisodesAndDisplay(event) {
+
+  const $show = $(event.target).closest('.Show');
+  const showId = $show.data('show-id');
+  console.log("showId:  ", showId);
   const episodes = await getEpisodesOfShow(showId);
   populateEpisodes(episodes);
 }
+
+$("#showsList").on("click", ".Show-getEpisodes", getEpisodesAndDisplay);
