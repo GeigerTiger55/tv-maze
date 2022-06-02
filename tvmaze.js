@@ -102,7 +102,7 @@ async function getEpisodesOfShow(id) {
   const listedEpisodes = [];
 
   for (let episode of response.data) {
-    let { id, name, season, number } = episode;
+    const { id, name, season, number } = episode;
 
     const tempEpisodeObj = {
       id,
@@ -127,6 +127,7 @@ async function getEpisodesOfShow(id) {
 
 function populateEpisodes(episodes) {
   const $episodesList = $("#episodesList");
+  $episodesList.empty();
 
   for (let episode of episodes) {
     const { name, season, number } = episode;
@@ -150,9 +151,10 @@ function populateEpisodes(episodes) {
  *
 */
 
-async function getEpisodesAndDisplay(event) {
-
-  const $show = $(event.target).closest('.Show');
+async function getEpisodesAndDisplay() {
+  //can either have 'this' or event in the parameter and 'this' replaced with
+  //event.target
+  const $show = $(this).closest('.Show');
   const showId = $show.data('show-id');
   console.log("showId:  ", showId);
   const episodes = await getEpisodesOfShow(showId);
